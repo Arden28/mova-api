@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('reservation_buses', function (Blueprint $table) {
             $table->uuid('reservation_id');
-            $table->uuid('bus_id');
+            $table->unsignedBigInteger('bus_id');
 
             // Prevent duplicates (same bus twice on one reservation)
             $table->primary(['reservation_id', 'bus_id']);
