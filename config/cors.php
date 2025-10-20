@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://mova-manager.vercel.app'],
+    'allowed_origins' => ['http://localhost:5173', 'https://mova-manager.vercel.app'],
 
     'allowed_origins_patterns' => [],
 
