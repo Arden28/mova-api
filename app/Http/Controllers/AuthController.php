@@ -36,12 +36,12 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'phone'    => ['required','string'], // changed from email to phone
+            'email'    => ['required','email','max:255'],
             'password' => ['required','string'],
             'device'   => ['nullable','string','max:60'],
         ]);
 
-        $user = User::where('phone', $credentials['phone'])->first();
+        $user = User::where('email', $credentials['email'])->first();
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return response()->json(['message' => 'Invalid credentials'], 422);
