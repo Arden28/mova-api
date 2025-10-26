@@ -79,7 +79,7 @@ class UpdateReservationRequest extends FormRequest
             $mapped['waypoints'] = $nullIfEmpty($mapped['waypoints']);
         }
 
-        // Waypoints: normalize label empty string -> null (you commented out per-point rules, but keep it clean)
+        // Waypoints: normalize label empty string -> null
         if (is_array($mapped['waypoints'])) {
             $mapped['waypoints'] = array_values(array_map(function ($wp) use ($nullIfEmpty) {
                 return [
@@ -88,6 +88,18 @@ class UpdateReservationRequest extends FormRequest
                     'label' => array_key_exists('label', $wp) ? $nullIfEmpty($wp['label']) : null,
                 ];
             }, $mapped['waypoints']));
+        }
+
+        // Coerce bus_ids to integers (DB now uses INT primary keys)
+        if (is_array($mapped['bus_ids'])) {
+            $mapped['bus_ids'] = array_values(array_filter(array_map(function ($id) {
+                // allow numeric strings; cast to int
+                if (is_numeric($id)) {
+                    return (int) $id;
+                }
+                // if it's non-numeric, leave as-is; the validator ("integer") will catch it
+                return $id;
+            }, $mapped['bus_ids']), static fn($v) => $v !== null && $v !== ''));
         }
 
         $this->merge($mapped);
@@ -112,16 +124,17 @@ class UpdateReservationRequest extends FormRequest
 
             'status'          => ['sometimes','required', Rule::in(['pending','confirmed','cancelled'])],
 
-            'waypoints'               => ['sometimes','nullable','array','min:2'],
-            // per-point rules commented out intentionally, as in your version
-            // 'waypoints.*.lat'       => ['required_with:waypoints','numeric','between:-90,90'],
-            // 'waypoints.*.lng'       => ['required_with:waypoints','numeric','between:-180,180'],
-            // 'waypoints.*.label'     => ['nullable','string','max:255'],
+            'waypoints'       => ['sometimes','nullable','array','min:2'],
+            // per-point rules intentionally commented out (as in your version)
+            // 'waypoints.*.lat'   => ['required_with:waypoints','numeric','between:-90,90'],
+            // 'waypoints.*.lng'   => ['required_with:waypoints','numeric','between:-180,180'],
+            // 'waypoints.*.label' => ['nullable','string','max:255'],
 
             'distance_km'     => ['sometimes','nullable','numeric','min:0','max:100000'],
 
             'bus_ids'         => ['sometimes','nullable','array'],
-            'bus_ids.*'       => ['uuid','distinct','exists:buses,id'],
+            // CHANGED: bus_ids are integers now (not UUIDs)
+            'bus_ids.*'       => ['integer','distinct','exists:buses,id'],
 
             'event'           => ['sometimes','required', Rule::in(['none','wedding','funeral','church'])],
         ];
