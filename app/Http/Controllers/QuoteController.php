@@ -16,7 +16,7 @@ class QuoteController extends Controller
         $dto = new QuoteRequest(
             vehicleType: $req->string('vehicle_type'),
             distanceKm : (float) $req->input('distance_km'),
-            eventType  : $req->string('event_type', 'none'),
+            eventType  : $req->string('event', 'none'),
             buses      : (int) ($req->input('buses', 1)),
             when       : $req->filled('when') ? Carbon::parse($req->input('when')) : null,
         );

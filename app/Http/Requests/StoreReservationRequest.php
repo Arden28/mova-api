@@ -52,7 +52,7 @@ class StoreReservationRequest extends FormRequest
             'bus_ids.*'      => ['uuid','distinct','exists:buses,id'],
 
 
-            'event_type'    => ['required', Rule::in(['none','marriage','funeral','church'])],
+            'event'    => ['required', Rule::in(['none','wedding','funeral','church'])],
         ];
     }
 }

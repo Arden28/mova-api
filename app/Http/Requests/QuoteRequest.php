@@ -24,7 +24,7 @@ class QuoteRequest extends FormRequest
         return [
             'vehicle_type' => ['required','in:hiace,coaster'],
             'distance_km'  => ['required','numeric','min:0'],
-            'event_type'   => ['nullable','in:none,marriage,funeral,church'],
+            'event'   => ['nullable','in:none,wedding,funeral,church'],
             'buses'        => ['nullable','integer','min:1','max:100'],
             // 'when'       => ['nullable','date'] // reserved for future time-based rules
         ];

@@ -49,7 +49,7 @@ class UpdateReservationRequest extends FormRequest
             'bus_ids'        => ['sometimes','nullable','array'],
             'bus_ids.*'      => ['uuid','distinct','exists:buses,id'],
 
-            'event_type'    => ['sometimes','required', Rule::in(['none','marriage','funeral','church'])],
+            'event'    => ['sometimes','required', Rule::in(['none','wedding','funeral','church'])],
         ];
     }
 }

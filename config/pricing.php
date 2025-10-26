@@ -21,7 +21,7 @@ return [
     // Event multipliers (25–30% depending on event)  :contentReference[oaicite:3]{index=3}
     'events' => [
         'none'    => 0.00,
-        'marriage'=> 0.30, // Mariage +30%  :contentReference[oaicite:4]{index=4}
+        'wedding'=> 0.30, // Mariage +30%  :contentReference[oaicite:4]{index=4}
         'funeral' => 0.25, // Obsèques +25%  :contentReference[oaicite:5]{index=5}
         'church'  => 0.20, // Églises +20%   :contentReference[oaicite:6]{index=6}
     ],
