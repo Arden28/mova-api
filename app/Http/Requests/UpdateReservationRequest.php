@@ -40,9 +40,9 @@ class UpdateReservationRequest extends FormRequest
             'status'          => ['sometimes','required', Rule::in(['pending','confirmed','cancelled'])],
 
             'waypoints'               => ['sometimes','nullable','array','min:2'],
-            'waypoints.*.lat'         => ['required_with:waypoints','numeric','between:-90,90'],
-            'waypoints.*.lng'         => ['required_with:waypoints','numeric','between:-180,180'],
-            'waypoints.*.label'       => ['nullable','string','max:255'],
+            // 'waypoints.*.lat'         => ['required_with:waypoints','numeric','between:-90,90'],
+            // 'waypoints.*.lng'         => ['required_with:waypoints','numeric','between:-180,180'],
+            // 'waypoints.*.label'       => ['nullable','string','max:255'],
             'distance_km'             => ['sometimes','nullable','numeric','min:0','max:100000'],
 
             // when present, we’ll sync() with these
