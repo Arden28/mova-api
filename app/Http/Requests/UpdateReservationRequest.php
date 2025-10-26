@@ -4,25 +4,98 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateReservationRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * Normalize incoming payload (camelCase + nested) to snake_case
+     * expected by the validator. Also fix "envent_type"/"event_type"
+     * -> "event" and translate "marriage" -> "wedding".
      */
+    protected function prepareForValidation(): void
+    {
+        $all = $this->all();
+
+        $get = fn(string $path, $fallback = null) => data_get($all, $path, $fallback);
+        $nullIfEmpty = function ($v) {
+            return (is_string($v) && trim($v) === '') ? null : $v;
+        };
+
+        // Event mapping
+        $eventFromClient = $all['event']
+            ?? $all['event_type']
+            ?? $all['envent_type']
+            ?? null;
+
+        // translate front-end "marriage" -> validator's "wedding"
+        if ($eventFromClient === 'marriage') {
+            $eventFromClient = 'wedding';
+        }
+
+        $mapped = [
+            'code'            => $all['code'] ?? null,
+
+            'trip_date'       => $all['trip_date'] ?? $all['tripDate'] ?? null,
+            'from_location'   => $all['from_location'] ?? $get('route.from'),
+            'to_location'     => $all['to_location']   ?? $get('route.to'),
+
+            'passenger_name'  => $all['passenger_name']  ?? $get('passenger.name'),
+            'passenger_phone' => $all['passenger_phone'] ?? $get('passenger.phone'),
+            'passenger_email' => $all['passenger_email'] ?? $get('passenger.email'),
+
+            'seats'           => $all['seats'] ?? null,
+            'price_total'     => $all['price_total'] ?? $all['priceTotal'] ?? null,
+
+            'status'          => $all['status'] ?? null,
+
+            'waypoints'       => $all['waypoints'] ?? null,
+            'distance_km'     => $all['distance_km'] ?? $all['distanceKm'] ?? null,
+
+            'bus_ids'         => $all['bus_ids'] ?? $all['busIds'] ?? null,
+
+            'event'           => $all['event'] ?? $eventFromClient,
+        ];
+
+        // Nullify empty-string values for nullable fields
+        foreach (['code','passenger_email','price_total','distance_km'] as $k) {
+            if (array_key_exists($k, $mapped)) {
+                $mapped[$k] = $nullIfEmpty($mapped[$k]);
+            }
+        }
+
+        // Ensure arrays are really arrays or null
+        if (!is_array($mapped['bus_ids'] ?? null)) {
+            $mapped['bus_ids'] = $nullIfEmpty($mapped['bus_ids']);
+        }
+        if (!is_array($mapped['waypoints'] ?? null)) {
+            $mapped['waypoints'] = $nullIfEmpty($mapped['waypoints']);
+        }
+
+        // Waypoints: normalize label empty string -> null (you commented out per-point rules, but keep it clean)
+        if (is_array($mapped['waypoints'])) {
+            $mapped['waypoints'] = array_values(array_map(function ($wp) use ($nullIfEmpty) {
+                return [
+                    'lat'   => $wp['lat'] ?? null,
+                    'lng'   => $wp['lng'] ?? null,
+                    'label' => array_key_exists('label', $wp) ? $nullIfEmpty($wp['label']) : null,
+                ];
+            }, $mapped['waypoints']));
+        }
+
+        $this->merge($mapped);
+    }
+
     public function rules(): array
     {
-        $id = $this->route('reservation'); // {reservation} is UUID
+        $id = $this->route('reservation'); // UUID or model via route binding
 
         return [
             'code'            => ['sometimes','nullable','string','max:32', Rule::unique('reservations','code')->ignore($id)],
@@ -40,16 +113,43 @@ class UpdateReservationRequest extends FormRequest
             'status'          => ['sometimes','required', Rule::in(['pending','confirmed','cancelled'])],
 
             'waypoints'               => ['sometimes','nullable','array','min:2'],
-            // 'waypoints.*.lat'         => ['required_with:waypoints','numeric','between:-90,90'],
-            // 'waypoints.*.lng'         => ['required_with:waypoints','numeric','between:-180,180'],
-            // 'waypoints.*.label'       => ['nullable','string','max:255'],
-            'distance_km'             => ['sometimes','nullable','numeric','min:0','max:100000'],
+            // per-point rules commented out intentionally, as in your version
+            // 'waypoints.*.lat'       => ['required_with:waypoints','numeric','between:-90,90'],
+            // 'waypoints.*.lng'       => ['required_with:waypoints','numeric','between:-180,180'],
+            // 'waypoints.*.label'     => ['nullable','string','max:255'],
 
-            // when present, we’ll sync() with these
-            'bus_ids'        => ['sometimes','nullable','array'],
-            'bus_ids.*'      => ['uuid','distinct','exists:buses,id'],
+            'distance_km'     => ['sometimes','nullable','numeric','min:0','max:100000'],
 
-            'event'    => ['sometimes','required', Rule::in(['none','wedding','funeral','church'])],
+            'bus_ids'         => ['sometimes','nullable','array'],
+            'bus_ids.*'       => ['uuid','distinct','exists:buses,id'],
+
+            'event'           => ['sometimes','required', Rule::in(['none','wedding','funeral','church'])],
         ];
+    }
+
+    /**
+     * Log normalized payload + errors on 422 for quick diagnosis.
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        try {
+            Log::warning('UpdateReservation validation failed', [
+                'route_reservation' => $this->route('reservation'),
+                'normalized_payload' => $this->all(),
+                'errors'  => $validator->errors()->toArray(),
+                'headers' => [
+                    'content_type' => $this->headers->get('Content-Type'),
+                    'accept'       => $this->headers->get('Accept'),
+                ],
+                'query'   => $this->query->all(),
+            ]);
+        } catch (\Throwable $e) {}
+
+        throw new HttpResponseException(
+            response()->json([
+                'message' => 'The given data was invalid.',
+                'errors'  => $validator->errors(),
+            ], 422)
+        );
     }
 }

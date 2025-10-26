@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateReservationRequest;
 use App\Http\Resources\ReservationResource;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class ReservationController extends Controller
@@ -111,6 +112,13 @@ class ReservationController extends Controller
             // If provided, replace associations (sync). If omitted, leave as-is.
             $reservation->buses()->sync(array_values($busIds));
         }
+
+
+        Log::info('UpdateReservation validated payload', [
+            'reservation_id' => $reservation->id,
+            'data' => $data,
+            'bus_ids' => $busIds,
+        ]);
 
         return new ReservationResource($reservation->load('buses'));
     }
