@@ -4,7 +4,7 @@ return [
     // Currency label only (no formatting)
     'currency' => 'XAF', // FCFA
 
-    // Vehicle types with base rules (from your doc)
+    // Vehicle types with base rules (from doc)
     // Hiace: 425 / km, +40% motivation
     // Coaster: 725 / km, +25% motivation  :contentReference[oaicite:0]{index=0}
     'vehicles' => [

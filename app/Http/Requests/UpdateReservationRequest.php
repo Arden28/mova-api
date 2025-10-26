@@ -48,6 +48,8 @@ class UpdateReservationRequest extends FormRequest
             // when present, we’ll sync() with these
             'bus_ids'        => ['sometimes','nullable','array'],
             'bus_ids.*'      => ['uuid','distinct','exists:buses,id'],
+
+            'event_type'    => ['sometimes','required', Rule::in(['none','marriage','funeral','church'])],
         ];
     }
 }
