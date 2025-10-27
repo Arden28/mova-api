@@ -46,6 +46,10 @@ class StoreBusRequest extends FormRequest
                 'nullable',
                 Rule::exists('users','id')->where(fn($q)=>$q->where('role','driver')),
             ],
+            'assigned_conductor_id' => [
+                'nullable',
+                Rule::exists('users','id')->where(fn($q)=>$q->where('role','conductor')),
+            ],
         ];
     }
 }

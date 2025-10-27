@@ -46,6 +46,10 @@ class UpdateBusRequest extends FormRequest
                 'sometimes','nullable',
                 Rule::exists('users','id')->where(fn($q)=>$q->where('role','driver')),
             ],
+            'assigned_conductor_id' => [
+                'sometimes','nullable',
+                Rule::exists('users','id')->where(fn($q)=>$q->where('role','conductor')),
+            ],
         ];
     }
 }
