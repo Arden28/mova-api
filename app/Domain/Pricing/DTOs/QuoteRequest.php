@@ -7,10 +7,15 @@ use Carbon\CarbonInterface;
 class QuoteRequest
 {
     public function __construct(
-        public string $vehicleType,     // 'hiace' | 'coaster'
-        public float $distanceKm,       // positive float
-        public string $eventType = 'none', // 'wedding' | 'funeral' | 'church' | 'none'
-        public int $buses = 1,          // number of buses
-        public ?CarbonInterface $when = null // optional, not used in v1 but kept for future rules
+        // Legacy fields (still supported)
+        public ?string $vehicleType = null, // 'hiace' | 'coaster'
+        public int $buses = 1,
+
+        // New: list of vehicle types (e.g. ['hiace','coaster'])
+        public array $vehicleTypes = [],
+
+        public float $distanceKm = 0.0,
+        public string $eventType = 'none',
+        public ?CarbonInterface $when = null
     ) {}
 }

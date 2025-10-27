@@ -136,7 +136,7 @@ class UpdateReservationRequest extends FormRequest
             // CHANGED: bus_ids are integers now (not UUIDs)
             'bus_ids.*'       => ['integer','distinct','exists:buses,id'],
 
-            'event'           => ['sometimes','required', Rule::in(['none','wedding','funeral','church'])],
+            'event'           => ['sometimes','required', Rule::in(['none', 'school_trip', 'university_trip', 'educational_tour', 'student_transport', 'wedding', 'funeral', 'birthday', 'baptism', 'family_meeting', 'conference', 'seminar', 'company_trip', 'business_mission', 'staff_shuttle', 'football_match', 'sports_tournament', 'concert', 'festival', 'school_competition', 'tourist_trip', 'group_excursion', 'pilgrimage', 'site_visit', 'airport_transfer', 'election_campaign', 'administrative_mission', 'official_trip', 'private_transport', 'special_event', 'simple_rental', 'church'])],
         ];
     }
 

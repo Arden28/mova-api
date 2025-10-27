@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('passenger_phone', 40);
             $table->string('passenger_email', 190)->nullable();
 
-            // Event 
+            // Event
             $table->enum('event', ['school_trip', 'university_trip', 'educational_tour', 'student_transport', 'wedding', 'funeral', 'birthday', 'baptism', 'family_meeting', 'conference', 'seminar', 'company_trip', 'business_mission', 'staff_shuttle', 'football_match', 'sports_tournament', 'concert', 'festival', 'school_competition', 'tourist_trip', 'group_excursion', 'pilgrimage', 'site_visit', 'airport_transfer', 'election_campaign', 'administrative_mission', 'official_trip', 'private_transport', 'special_event', 'simple_rental'])->nullable();
 
             // Seats & pricing

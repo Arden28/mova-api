@@ -7,23 +7,69 @@ return [
     // Vehicle types with base rules (from doc)
     // Hiace: 425 / km, +40% motivation
     // Coaster: 725 / km, +25% motivation  :contentReference[oaicite:0]{index=0}
+
     'vehicles' => [
         'hiace' => [
             'per_km' => 425,
-            'motivation_percent' => 0.40, // +40%  :contentReference[oaicite:1]{index=1}
+            'motivation_percent' => 0.40,
+            'label' => 'Hiace',
         ],
-        'coaster' => [
+            'coaster' => [
             'per_km' => 725,
-            'motivation_percent' => 0.25, // +25%  :contentReference[oaicite:2]{index=2}
+            'motivation_percent' => 0.25,
+            'label' => 'Coaster',
         ],
     ],
 
-    // Event multipliers (25–30% depending on event)  :contentReference[oaicite:3]{index=3}
+    /**
+     * Event multipliers:
+     * - Tier A (0.30): high-demand / high-service complexity
+     * - Tier B (0.25): formal/official or solemn events
+     * - Tier C (0.20): community/religious/education (keeps your legacy 'church' at 0.20)
+     * - Tier D (0.10): simple private transport
+     * - none / simple_rental (0.00): baseline
+     */
     'events' => [
-        'none'    => 0.00,
-        'wedding'=> 0.30, // Mariage +30%  :contentReference[oaicite:4]{index=4}
-        'funeral' => 0.25, // Obsèques +25%  :contentReference[oaicite:5]{index=5}
-        'church'  => 0.20, // Églises +20%   :contentReference[oaicite:6]{index=6}
+        // Baseline
+        'none'            => 0.00,
+        'simple_rental'   => 0.00,
+
+        // Tier D (0.10)
+        'private_transport' => 0.10,
+
+        // Tier C (0.20)
+        'church'            => 0.20,
+        'school_trip'       => 0.20,
+        'university_trip'   => 0.20,
+        'educational_tour'  => 0.20,
+        'student_transport' => 0.20,
+        'school_competition'=> 0.20,
+        'site_visit'        => 0.20,
+
+        // Tier B (0.25)
+        'funeral'              => 0.25,
+        'conference'           => 0.25,
+        'seminar'              => 0.25,
+        'company_trip'         => 0.25,
+        'business_mission'     => 0.25,
+        'staff_shuttle'        => 0.25,
+        'sports_tournament'    => 0.25,
+        'tourist_trip'         => 0.25,
+        'group_excursion'      => 0.25,
+        'airport_transfer'     => 0.25,
+        'administrative_mission'=> 0.25,
+        'official_trip'        => 0.25,
+        'election_campaign'    => 0.25,
+        'special_event'        => 0.25,
+
+        // Tier A (0.30)
+        'wedding'       => 0.30,
+        'birthday'      => 0.30,
+        'baptism'       => 0.30,
+        'family_meeting'=> 0.30,
+        'football_match'=> 0.30,
+        'concert'       => 0.30,
+        'festival'      => 0.30,
     ],
 
     // Client Mobile Money fees (+4% on the client price)  :contentReference[oaicite:7]{index=7}
