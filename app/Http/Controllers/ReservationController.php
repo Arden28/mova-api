@@ -70,13 +70,7 @@ class ReservationController extends Controller
     {
         $data = $request->validated();
 
-        // Map passenger object (UI) if someone posts it that way:
-        // (Your frontend already sends flattened fields; leave as-is if not needed)
-        // if (isset($data['passenger']) && is_array($data['passenger'])) {
-        //     $data['passenger_name']  = $data['passenger']['name']  ?? null;
-        //     $data['passenger_phone'] = $data['passenger']['phone'] ?? null;
-        //     $data['passenger_email'] = $data['passenger']['email'] ?? null;
-        // }
+        Log::info('StoreReservation validated data', ['data' => $data]);
 
         $busIds = $data['bus_ids'] ?? null;
         unset($data['bus_ids']);
@@ -103,6 +97,7 @@ class ReservationController extends Controller
     public function update(UpdateReservationRequest $request, Reservation $reservation)
     {
         $data   = $request->validated();
+        Log::info('UpdateReservation validated data', ['data' => $data]);
         $busIds = array_key_exists('bus_ids', $data) ? ($data['bus_ids'] ?? null) : null;
         unset($data['bus_ids']);
 
