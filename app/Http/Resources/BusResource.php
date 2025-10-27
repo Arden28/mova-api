@@ -43,8 +43,8 @@ class BusResource extends JsonResource
                 'name' => $this->driver->name,
             ]),
             'conductor' => $this->whenLoaded('conductor', fn() => [
-                'id' => $this->driver->id,
-                'name' => $this->driver->name,
+                'id' => $this->conductor->id,
+                'name' => $this->conductor->name,
             ]),
 
             'created_at' => $this->created_at?->toIso8601String(),
