@@ -17,7 +17,7 @@ class ReservationResource extends JsonResource
         return [
             'id'              => (string) $this->id,
             'code'            => $this->code,
-            'trip_date'       => $this->trip_date?->toDateString(),
+            'trip_date'       => $this->trip_date,
             'from_location'   => $this->from_location,
             'to_location'     => $this->to_location,
 
