@@ -31,6 +31,7 @@ class BusResource extends JsonResource
 
             'operator_id'        => $this->operator_id,
             'assigned_driver_id' => $this->assigned_driver_id,
+            'assigned_conductor_id' => $this->assigned_conductor_id,
 
             // Optional related snippets
             'operator' => $this->whenLoaded('operator', fn() => [
@@ -38,6 +39,10 @@ class BusResource extends JsonResource
                 'name' => $this->operator->name,
             ]),
             'driver' => $this->whenLoaded('driver', fn() => [
+                'id' => $this->driver->id,
+                'name' => $this->driver->name,
+            ]),
+            'conductor' => $this->whenLoaded('conductor', fn() => [
                 'id' => $this->driver->id,
                 'name' => $this->driver->name,
             ]),
