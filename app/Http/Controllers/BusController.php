@@ -20,7 +20,7 @@ class BusController extends Controller
         // eager loads
         if ($with = $request->query('with')) {
             $relations = collect(explode(',', $with))
-                ->intersect(['operator','driver'])
+                ->intersect(['operator','driver', 'conductor'])
                 ->all();
             if ($relations) $q->with($relations);
         }
@@ -84,13 +84,13 @@ class BusController extends Controller
 
         $bus = Bus::create($data);
 
-        return new BusResource($bus->load(['operator','driver']));
+        return new BusResource($bus->load(['operator','driver', 'conductor']));
     }
 
     // GET /api/buses/{bus}
     public function show(Bus $bus)
     {
-        $bus->load(['operator','driver']);
+        $bus->load(['operator','driver', 'conductor']);
         return new BusResource($bus);
     }
 
@@ -98,7 +98,7 @@ class BusController extends Controller
     public function update(UpdateBusRequest $request, Bus $bus)
     {
         $bus->update($request->validated());
-        return new BusResource($bus->load(['operator','driver']));
+        return new BusResource($bus->load(['operator','driver', 'conductor']));
     }
 
     // DELETE /api/buses/{bus}
@@ -132,6 +132,21 @@ class BusController extends Controller
         $bus->update(['assigned_driver_id' => $validated['user_id'] ?? null]);
 
         return new BusResource($bus->load('driver'));
+    }
+
+    // POST /api/buses/{bus}/assign-conductor  { user_id: uuid|null }
+    public function assignConductor(Request $request, Bus $bus)
+    {
+        $validated = $request->validate([
+            'user_id' => [
+                'nullable',
+                Rule::exists('users','id')->where(fn($q)=>$q->where('role','conductor')),
+            ],
+        ]);
+
+        $bus->update(['assigned_conductor_id' => $validated['user_id'] ?? null]);
+
+        return new BusResource($bus->load('conductor'));
     }
 
     // POST /api/buses/{bus}/set-operator  { user_id: uuid|null }

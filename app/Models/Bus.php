@@ -27,6 +27,7 @@ class Bus extends Model
         'insurance_valid_until',
         'operator_id',
         'assigned_driver_id',
+        'assigned_conductor_id',
     ];
 
     // Casts
@@ -53,6 +54,14 @@ class Bus extends Model
     public function driver(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_driver_id');
+    }
+
+    /**
+     * Assigned conductor
+     */
+    public function conductor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_conductor_id');
     }
 
     public function reservations(): BelongsToMany

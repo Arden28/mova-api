@@ -35,7 +35,7 @@ class Reservation extends Model
     ];
 
     protected $casts = [
-        'trip_date'      => 'date',
+        'trip_date' => 'datetime',
         'waypoints'      => 'array',     // [{lat,lng,label},...]
         'price_total'    => 'decimal:2',
         'distance_km'    => 'decimal:2',

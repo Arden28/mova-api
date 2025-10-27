@@ -11,7 +11,7 @@ class BusSeeder extends Seeder
 {
     public function run(): void
     {
-        // --- People: Owners & Drivers ---
+        // --- People: Owners, Drivers, Conductors ---
         $people = [
             // Owners
             [
@@ -82,6 +82,48 @@ class BusSeeder extends Seeder
                 'phone' => '+242066334455',
                 'license_no' => 'CG-DRV-1010',
             ],
+
+            // Conductor
+            [
+                'role' => 'conductor',
+                'name' => 'Prince Ikouanga',
+                'phone' => '+242067100001',
+            ],
+            [
+                'role' => 'conductor',
+                'name' => 'Clarisse Ndoutoume',
+                'phone' => '+242067100002',
+            ],
+            [
+                'role' => 'conductor',
+                'name' => 'Boris Banzouzi',
+                'phone' => '+242067100003',
+            ],
+            [
+                'role' => 'conductor',
+                'name' => 'Rita Massamba',
+                'phone' => '+242067100004',
+            ],
+            [
+                'role' => 'conductor',
+                'name' => 'Hervé Louzolo',
+                'phone' => '+242067100005',
+            ],
+            [
+                'role' => 'conductor',
+                'name' => 'Lucie Ngakala',
+                'phone' => '+242067100006',
+            ],
+            [
+                'role' => 'conductor',
+                'name' => 'Alain Kifoueti',
+                'phone' => '+242067100007',
+            ],
+            [
+                'role' => 'conductor',
+                'name' => 'Patricia Oko',
+                'phone' => '+242067100008',
+            ],
         ];
 
         $userMap = [];
@@ -90,24 +132,26 @@ class BusSeeder extends Seeder
             $user = User::updateOrCreate(
                 ['phone' => $p['phone']],
                 [
-                    'name' => $p['name'],
-                    'email' => $p['email'] ?? null,
-                    'phone' => $p['phone'],
-                    'role' => $p['role'],
+                    'name'       => $p['name'],
+                    'email'      => $p['email'] ?? null,
+                    'phone'      => $p['phone'],
+                    'role'       => $p['role'],
                     'license_no' => $p['license_no'] ?? null,
-                    'password' => bcrypt('Password123!'),
+                    'password'   => bcrypt('Password123!'),
                 ]
             );
             $userMap[$p['phone']] = $user->id;
         }
 
         // --- Buses ---
+        // Added 'conductor_phone' to each record
         $buses = [
             [
                 'plate' => 'CG-5412-BV',
                 'capacity' => 30,
                 'operator_phone' => '+242065432100',
                 'driver_phone' => '+242066123456',
+                'conductor_phone' => '+242067100001',
                 'name' => 'Moukoukoulou Express',
                 'type' => 'coaster',
                 'status' => 'active',
@@ -124,6 +168,7 @@ class BusSeeder extends Seeder
                 'capacity' => 20,
                 'operator_phone' => '+242065432100',
                 'driver_phone' => '+242066654321',
+                'conductor_phone' => '+242067100002',
                 'name' => 'Poto-Poto Shuttle',
                 'type' => 'hiace',
                 'status' => 'active',
@@ -140,6 +185,7 @@ class BusSeeder extends Seeder
                 'capacity' => 40,
                 'operator_phone' => '+242065432101',
                 'driver_phone' => '+242066112233',
+                'conductor_phone' => '+242067100003',
                 'name' => 'Ouenze Flyer',
                 'type' => 'coaster',
                 'status' => 'active',
@@ -156,6 +202,7 @@ class BusSeeder extends Seeder
                 'capacity' => 15,
                 'operator_phone' => '+242065432101',
                 'driver_phone' => '+242066445566',
+                'conductor_phone' => '+242067100004',
                 'name' => 'Talangai Mini',
                 'type' => 'hiace',
                 'status' => 'active',
@@ -172,6 +219,7 @@ class BusSeeder extends Seeder
                 'capacity' => 50,
                 'operator_phone' => '+242065432102',
                 'driver_phone' => '+242066778899',
+                'conductor_phone' => '+242067100005',
                 'name' => 'Mfilou Express',
                 'type' => 'coaster',
                 'status' => 'active',
@@ -188,6 +236,7 @@ class BusSeeder extends Seeder
                 'capacity' => 18,
                 'operator_phone' => '+242065432102',
                 'driver_phone' => '+242066654321',
+                'conductor_phone' => '+242067100006',
                 'name' => 'Moungali Shuttle',
                 'type' => 'hiace',
                 'status' => 'active',
@@ -204,6 +253,7 @@ class BusSeeder extends Seeder
                 'capacity' => 35,
                 'operator_phone' => '+242065432100',
                 'driver_phone' => '+242066123456',
+                'conductor_phone' => '+242067100007',
                 'name' => 'Poto-Poto Express',
                 'type' => 'coaster',
                 'status' => 'maintenance',
@@ -220,6 +270,7 @@ class BusSeeder extends Seeder
                 'capacity' => 22,
                 'operator_phone' => '+242065432101',
                 'driver_phone' => '+242066112233',
+                'conductor_phone' => '+242067100008',
                 'name' => 'Marché Total Shuttle',
                 'type' => 'coaster',
                 'status' => 'active',
@@ -238,6 +289,7 @@ class BusSeeder extends Seeder
                 'capacity' => 25,
                 'operator_phone' => '+242065432103',
                 'driver_phone' => '+242066556677',
+                'conductor_phone' => '+242067100001',
                 'name' => 'Bacongo Express',
                 'type' => 'hiace',
                 'status' => 'active',
@@ -254,6 +306,7 @@ class BusSeeder extends Seeder
                 'capacity' => 45,
                 'operator_phone' => '+242065432103',
                 'driver_phone' => '+242066334455',
+                'conductor_phone' => '+242067100002',
                 'name' => 'Makélékélé Express',
                 'type' => 'coaster',
                 'status' => 'active',
@@ -270,6 +323,7 @@ class BusSeeder extends Seeder
                 'capacity' => 55,
                 'operator_phone' => '+242065432100',
                 'driver_phone' => '+242066445566',
+                'conductor_phone' => '+242067100003',
                 'name' => 'Aéroport Express',
                 'type' => 'coaster',
                 'status' => 'active',
@@ -286,6 +340,7 @@ class BusSeeder extends Seeder
                 'capacity' => 28,
                 'operator_phone' => '+242065432102',
                 'driver_phone' => '+242066556677',
+                'conductor_phone' => '+242067100004',
                 'name' => 'Kintélé Shuttle',
                 'type' => 'hiace',
                 'status' => 'active',
@@ -302,6 +357,7 @@ class BusSeeder extends Seeder
                 'capacity' => 38,
                 'operator_phone' => '+242065432101',
                 'driver_phone' => '+242066334455',
+                'conductor_phone' => '+242067100005',
                 'name' => 'Plateau Express',
                 'type' => 'coaster',
                 'status' => 'maintenance',
@@ -318,6 +374,7 @@ class BusSeeder extends Seeder
                 'capacity' => 20,
                 'operator_phone' => '+242065432103',
                 'driver_phone' => '+242066778899',
+                'conductor_phone' => '+242067100006',
                 'name' => 'Moungali Night Shuttle',
                 'type' => 'hiace',
                 'status' => 'active',
@@ -334,6 +391,7 @@ class BusSeeder extends Seeder
                 'capacity' => 32,
                 'operator_phone' => '+242065432102',
                 'driver_phone' => '+242066334455',
+                'conductor_phone' => '+242067100007',
                 'name' => 'Talangai Express',
                 'type' => 'coaster',
                 'status' => 'active',
@@ -351,25 +409,25 @@ class BusSeeder extends Seeder
             Bus::updateOrCreate(
                 ['plate' => $data['plate']],
                 [
-                    'plate' => $data['plate'],
-                    'capacity' => $data['capacity'],
-                    'operator_id' => $userMap[$data['operator_phone']] ?? null,
-                    'assigned_driver_id' => $userMap[$data['driver_phone']] ?? null,
-                    'name' => $data['name'],
-                    'type' => $data['type'],
-                    'status' => $data['status'],
-                    'model' => $data['model'],
-                    'year' => $data['year'],
-                    'mileage_km' => $data['mileage_km'],
-                    'last_service_date' => $data['last_service_date'],
-                    'insurance_provider' => $data['insurance_provider'],
-                    'insurance_policy_number' => $data['insurance_policy_number'],
-                    'insurance_valid_until' => $data['insurance_valid_until'],
-                    // 'created_at' => $data['created_at'],
+                    'plate'                  => $data['plate'],
+                    'capacity'               => $data['capacity'],
+                    'operator_id'            => $userMap[$data['operator_phone']] ?? null,
+                    'assigned_driver_id'     => $userMap[$data['driver_phone']] ?? null,
+                    'assigned_conductor_id'  => $userMap[$data['conductor_phone']] ?? null,
+                    'name'                   => $data['name'],
+                    'type'                   => $data['type'],
+                    'status'                 => $data['status'],
+                    'model'                  => $data['model'],
+                    'year'                   => $data['year'],
+                    'mileage_km'             => $data['mileage_km'],
+                    'last_service_date'      => $data['last_service_date'],
+                    'insurance_provider'     => $data['insurance_provider'],
+                    'insurance_policy_number'=> $data['insurance_policy_number'],
+                    'insurance_valid_until'  => $data['insurance_valid_until'],
                 ]
             );
         }
 
-        $this->command->info('✅ 17 Buses seeded successfully!');
+        $this->command->info('✅ '.count($buses).' Buses seeded successfully!');
     }
 }

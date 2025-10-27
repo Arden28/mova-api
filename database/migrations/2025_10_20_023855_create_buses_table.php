@@ -39,11 +39,18 @@ return new class extends Migration
                 ->nullOnDelete()
                 ->comment('Assigned driver user FK');
 
+            $table->foreignId('assigned_conductor_id')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete()
+                ->comment('Assigned conductor user FK');
+
             $table->timestamps();
 
             // Indexes for common queries
             $table->index('operator_id');
             $table->index('assigned_driver_id');
+            $table->index('assigned_conductor_id');
             $table->index(['status', 'type']);
         });
     }

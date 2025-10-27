@@ -16,7 +16,7 @@ Route::prefix('auth')->group(function () {
     Route::post('logout',   [AuthController::class,'logout'])->middleware('auth:sanctum');
     Route::get('me',        [AuthController::class,'me'])->middleware('auth:sanctum');
 });
-    
+
 Route::middleware('auth:sanctum')->group(function () {
 
     // Staff management (admin only)
@@ -39,6 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // actions
     Route::post('/buses/{bus}/status',         [BusController::class, 'setStatus']);
     Route::post('/buses/{bus}/assign-driver',  [BusController::class, 'assignDriver']);
+    Route::post('/buses/{bus}/assign-conductor',  [BusController::class, 'assignConductor']);
     Route::post('/buses/{bus}/set-operator',   [BusController::class, 'setOperator']);
     Route::post('/buses/bulk-status',          [BusController::class, 'bulkStatus']);
 
@@ -54,7 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/reservations/{reservation}/attach-bus',  [ReservationController::class, 'attachBus']);
     Route::post('/reservations/{reservation}/detach-bus',  [ReservationController::class, 'detachBus']);
     Route::post('/reservations/bulk-status',               [ReservationController::class, 'bulkStatus']);
-    
+
     // Quote endpoint(Pricing engine)
     Route::post('/quote', QuoteController::class);
 
