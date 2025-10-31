@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BusController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PersonController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\ReservationController;
@@ -58,6 +59,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Quote endpoint(Pricing engine)
     Route::post('/quote', QuoteController::class);
+
+    // Dashboard
+    Route::get('/dash/cards',  [DashboardController::class, 'cards']);   // KPIs
+    Route::get('/dash/series', [DashboardController::class, 'series']);  // time series
 
 });
 
