@@ -14,7 +14,7 @@ return [
             'motivation_percent' => 0.40,
             'label' => 'Hiace',
         ],
-            'coaster' => [
+        'coaster' => [
             'per_km' => 725,
             'motivation_percent' => 0.25,
             'label' => 'Coaster',

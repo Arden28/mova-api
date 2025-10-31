@@ -15,18 +15,25 @@ class QuoteRequest extends FormRequest
         $vehicleKeys = array_keys(config('pricing.vehicles'));
 
         return [
-            // NEW: either provide bus IDs, or a vehicles[] array with type strings, or fallback to legacy fields.
+            // Priority: bus_ids > vehicles_map > vehicles > legacy vehicle_type+buses
 
-            // Option A: by Bus IDs (we’ll look up types from DB)
+            // A) Bus IDs
             'bus_ids'        => ['sometimes','array','min:1','max:100'],
             'bus_ids.*'      => ['integer','distinct'],
 
-            // Option B: by explicit vehicle types array (e.g., ["hiace","coaster","coaster"])
+            // B) Compact map: { "hiace": 3, "coaster": 2 }
+            'vehicles_map'   => ['sometimes','array','min:1'],
+            // keys must be known vehicle types; values are positive integers
+            'vehicles_map.*' => ['integer','min:1'],
+
+            // C) Flat array (fallback): ["hiace","coaster",...]
             'vehicles'       => ['sometimes','array','min:1','max:100'],
             'vehicles.*'     => [Rule::in($vehicleKeys)],
 
-            // Legacy option (kept for backward compatibility)
-            'vehicle_type'   => ['sometimes','required_without_all:bus_ids,vehicles', Rule::in($vehicleKeys)],
+            // D) Legacy (final fallback)
+            'vehicle_type'   => ['sometimes',
+                                'required_without_all:bus_ids,vehicles_map,vehicles',
+                                Rule::in($vehicleKeys)],
             'buses'          => ['sometimes','integer','min:1','max:100'],
 
             // Common
@@ -39,7 +46,9 @@ class QuoteRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'vehicle_type.required_without_all' => 'Provide vehicle_type+buses OR vehicles[] OR bus_ids[].',
+            'vehicle_type.required_without_all' =>
+                'Provide bus_ids[] OR vehicles_map{} OR vehicles[] OR legacy vehicle_type+buses.',
         ];
     }
+
 }
