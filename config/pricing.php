@@ -21,6 +21,8 @@ return [
         ],
     ],
 
+    'min_distance_km' => 5.0,
+
     /**
      * Event multipliers:
      * - Tier A (0.30): high-demand / high-service complexity
